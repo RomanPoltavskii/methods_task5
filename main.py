@@ -3,8 +3,8 @@ from scipy.optimize import minimize_scalar
 def f(x):
     return 1 / (x**2 * math.log(x) ** 2)
 
-def ddf(x):
-    return
+def ddf(x): # вторая производная
+    return (2*(3*math.log(x)**2 + 5* math.log(x) + 3))/x**4 * math.log(x) ** 4
 def trapezoidal_rule(f, a, b, n):
     # метод трапеций
     h = (b - a) / n
@@ -23,6 +23,7 @@ res = (trapezoidal_rule(f, a, b, n)) # значение по формуле тр
 def accuracy(ddf, a, b, n):
     max_ddf = minimize_scalar(lambda x: -abs(ddf(x)), bounds=(a, b), method='bounded')
     h = (b - a) / n
-    return (((b - a)*h**2)/24)*round(abs(max_ddf.fun), 5)
+    return -(((b - a)*h**2)/12)*round(abs(max_ddf.fun), 5)
 
-print(res)
+print("Приближенное значение интеграла: ", res)
+print(str(accuracy(ddf, a, b, n)))
