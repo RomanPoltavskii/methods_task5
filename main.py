@@ -1,22 +1,28 @@
 import math
-
+from scipy.optimize import minimize_scalar
 def f(x):
     return 1 / (x**2 * math.log(x) ** 2)
 
-def trap(f, a, b, h):
-    s = 0.5 * (f(a) + f(b))
-    x = a + h
-    while (x <= b - h):
-        s += f(x)
-        x += h
-    return h * s
+def ddf(x):
+    return
+def trapezoidal_rule(f, a, b, n):
+    # метод трапеций
+    h = (b - a) / n
+    sum = 0.5 * (f(a) + f(b))
+    for i in range(1, n):
+        x = a + i * h
+        sum += f(x)
+    return h * sum
 
-I_exact = 0.326396 # точное значение
-res = (trap(f, 2, 8, 0.001)) # значение по формуле трапеций
-Delta_I_abs = abs(I_exact - res)
-Delta_I_rel = Delta_I_abs / abs(I_exact)
 
-# выводим результаты
-print("Приближенное значение интеграла: ", res)
-print("Абсолютная погрешность: ", Delta_I_abs)
-print("Относительная погрешность: ", Delta_I_rel)
+a, b = 2, 8
+n = 100
+res = (trapezoidal_rule(f, a, b, n)) # значение по формуле трапеций
+
+
+def accuracy(ddf, a, b, n):
+    max_ddf = minimize_scalar(lambda x: -abs(ddf(x)), bounds=(a, b), method='bounded')
+    h = (b - a) / n
+    return (((b - a)*h**2)/24)*round(abs(max_ddf.fun), 5)
+
+print(res)
